@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	alert("aaaa");
+	//alert("aaaa");
 	findq();
 	/*$('#button_register').on('click', function() {
 		alert("点击动作");
