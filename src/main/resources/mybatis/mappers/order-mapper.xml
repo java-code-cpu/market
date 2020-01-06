@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.situ.market.order.dao.OrderDao">
+
+	<sql id="order_base_select">
+		SELECT ROW_ID,USER_ROW_ID,ALL_MONEY,ADDRESS_ID,ORDER_STATE,PAY_MONTHED FORM TB_ORDER WHERE ACTIVE_FLAG = 1
+	</sql>
+	<select id="findAll" resultType="Order">
+		<include refid="order_base_select"/>
+	</select>
+	<insert id="save" parameterType="Order" useGeneratedKeys="true" keyColumn="ROW_ID" keyProperty="rowId">
+		INSERT INTO (USER_ROW_ID,ALL_MONEY,ADDRESS_ID,ORDER_STATE,PAY_MONTHED,ACTIVE_FLAG) VALUES(#{userRowId},#{allMoney},#{addressId},#{orderState},#{payMonthed})
+	</insert>
+	<update id="delete" parameterType="Order">
+		UPDATE TB_ORDER SET ACTIVE_FLAG = 0 WHERE ROW_ID = #{rowId}
+	</update>
+	<update id="update">
+		UPDATE TB_ORDER 
+		<set>
+			<if test="userRowId!=null">
+				USER_ROW_ID = #{userRowId},
+			</if>
+			<if test="allMoney!=null">
+				ALL_MONEY = #{allMoney},
+			</if>
+			<if test="addressId!=null">
+				ADDRESS_ID = #{addressId},
+			</if>
+			<if test="orderState!=null">
+				ORDER_STATE = #{orderState},
+			</if>
+			<if test="payMonthed!=null">
+				PAY_MONTHED = #{payMonthed},
+			</if>
+			<if test="activeFlag!=null">
+				ACTIVE_FLAG = #{activeFlag},
+			</if>
+		</set>
+		WHERE ROW_ID = #{rowId}
+	</update>
+	<select id="findById" resultType="Order">
+			<include refid="order_base_select"/> AND ROW_ID = #{rowId}
+	</select>
+</mapper>

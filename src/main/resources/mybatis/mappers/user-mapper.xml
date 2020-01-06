@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.situ.market.user.dao.UserDao">
+	<sql id="user_base_select">
+		SELECT
+		ROW_ID,USER_NAME,USER_CODE,USER_PASS,USER_PHONE,USER_LOCK,USER_IMAGE,LAST_LOGINIP,LAST_LOGINDATA,ACTIVE_FLAG,CREATE_DATE,UPDATE_BY,UPDATE_DATE
+		FROM TB_USER WHERE ACTIVE_FLAG=1
+	</sql> 
+	<insert id="save">
+		INSERT INTO TB_USER
+		(USER_TYPE,USER_NAME,USER_CODE,USER_PASS,USER_PHONE,USER_IMAGE,USER_LOCK,LAST_LOGINIP,LAST_LOGINDATA,ACTIVE_FLAG)
+		VALUES
+		(#{userType},#{userName},#{userCode},#{userPass},#{userPhone},#{userImage},#{userLock},#{lastLoginIp},#{lastLoginData},#{activeFlag})
+	</insert>
+	<select id="get" resultType="User">
+		<include refid="user_base_select" />
+		AND USER_CODE=#{userCode}
+	</select>
+	<update id="update" parameterType="User">
+		UPDATE TB_USER
+		<set>
+			<if test="userName!=null">
+				USER_NAME = #{userName},
+			</if>
+			<if test="userPass!=null and userPass!=''">
+				USER_PASS = #{userPass},
+			</if>
+			<if test="userPhone!=null">
+				USER_PHONE = #{userPhone},
+			</if>
+			<if test="userLock!=null">
+				USER_LOCK = #{userLock},
+			</if>
+			<if test="activeFlag!=null">
+				ACTIVE_FLAG = #{activeFlag},
+			</if>
+			<if test="updateBy!=null">
+				UPDATE_BY = #{updateBy},
+			</if>
+			<if test="updateData!=null">
+				UPDATE_DATE = #{updateData},
+			</if>
+		</set>
+		WHERE ROW_ID = #{rowId}
+	</update>
+	<select id="find" resultType="User">
+		<include refid="user_base_select" />
+		AND ROW_ID = #{rowId}
+	</select>
+	<update id="supdate">
+		UPDATE TB_USER SET ACTIVE_FLAG = 0 WHERE ROW_ID = #{rowId} 
+	</update>
+	<select id="findAll" resultType="User">
+		<include refid="user_base_select" />
+	</select>
+	<select id="seleteByName" resultType="User">
+		<include refid="user_base_select"/><if test="user.userName=null">
+			AND USER_NAME = #{userName}
+		</if>
+		<if test="userCode!=null">
+			and USER_CODE = #{userCode}
+		</if>
+	</select>
+	<select id="findByName">
+		<include refid="user_base_select"/> WHERE USER_NAME = #{userName}
+	</select>
+
+</mapper>
